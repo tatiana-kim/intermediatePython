@@ -255,7 +255,7 @@ file, it's pretty straightforward.
         //get an element out of the list - the element is also a python objects
         PyObject* temp = PyList_GetItem(listObj, i);
         //we know that object represents an integer - so convert it into C long
-        long elem = PyInt_AsLong(temp);
+        long elem = PyLong_AsLong(temp);
         sum += elem;
       }
 
@@ -277,13 +277,18 @@ file, it's pretty straightforward.
         {NULL, NULL, 0, NULL}
     };
 
-    /*
-    addList is the module name, and this is the initialization block of the module.
-    <desired module name>, <the-info-table>, <module's-docstring>
-    */
-    PyMODINIT_FUNC initaddList(void){
-        Py_InitModule3("addList", addList_funcs,
-                       "Add all ze lists");
+    static struct PyModuleDef addList = 
+    {
+        PyModuleDef_HEAD_INIT,
+        "addList",
+        "usage: addList.add()\n",
+        -1,
+        addList_funcs
+    };
+
+    PyMODINIT_FUNC PyInit_addList(void)
+    {
+        return PyModule_Create(&addList);
     }
 
 A step by step explanation :
